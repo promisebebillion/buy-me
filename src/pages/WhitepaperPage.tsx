@@ -29,7 +29,9 @@ export function WhitepaperPage({ onBack }: WhitepaperPageProps) {
     <div className="whitepaper">
       <ReactiveGrid />
       <header className="paper-header">
-        <button className="paper-brand" onClick={onBack}><span>$</span>BUY</button>
+        <button className="paper-brand" onClick={onBack} aria-label="$BUY protocol home">
+          <img src="/logo.png" alt="$BUY" />
+        </button>
         <div className="paper-header-meta">WHITEPAPER / V0.1 / DESIGN DRAFT</div>
         <button className="back-to-app" onClick={onBack}>ENTER PROTOCOL <span>↗</span></button>
       </header>
@@ -58,7 +60,12 @@ export function WhitepaperPage({ onBack }: WhitepaperPageProps) {
         </section>
 
         <PaperSection number="00" title="Abstract" id="abstract" lead="A transparent coordination layer for token activity.">
-          <p>$BUY is a proposed token ecosystem in which distribution, staking, time locks, liquidity, buybacks, and burns are designed as parts of one observable system rather than disconnected campaigns. The product is not a promise that a token price will rise. Its purpose is narrower and measurable: make every supply-changing and value-routing action visible, rule-bound, and independently verifiable.</p>
+          <div className="paper-summary-grid">
+            <article><span>WHAT IT IS</span><strong>One visible token system</strong><p>Seven protocol modules share the same supply and value-flow accounting.</p></article>
+            <article><span>HOW IT WORKS</span><strong>Actions create state changes</strong><p>Every distribution, lock, trade, buyback, or burn produces a public on-chain event.</p></article>
+            <article><span>WHAT IT IS NOT</span><strong>Not a price promise</strong><p>The design explains mechanics and controls. It does not guarantee demand, yield, or appreciation.</p></article>
+          </div>
+          <p>$BUY is a proposed Solana token protocol connecting distribution, staking, time locks, liquidity, buybacks, and burns. Instead of presenting these features as separate campaigns, the protocol treats them as one observable accounting system. Every module has a defined input, output, and measurable effect.</p>
           <p>The protocol starts from a reference supply of <strong>1,000,000,000 $BUY</strong>. No additional issuance mechanism is assumed in this draft. Airdrops distribute an existing allocation; staking and locks temporarily reduce liquid supply; liquidity supports exchange; protocol revenue may be routed through a public buyback engine; and tokens routed to the burn module are permanently removed. The Flywheel page is the shared accounting surface connecting those modules.</p>
           <div className="paper-callout"><span>Core idea</span><strong>Activity should produce legible state changes—not hidden treasury decisions.</strong></div>
         </PaperSection>
@@ -170,7 +177,7 @@ export function WhitepaperPage({ onBack }: WhitepaperPageProps) {
         </PaperSection>
 
         <footer className="paper-footer">
-          <div><span>$</span>BUY</div>
+          <div className="paper-footer-brand"><img src="/logo.png" alt="$BUY" /></div>
           <p>WHITEPAPER V0.1 / DESIGN DRAFT<br />AUTONOMOUS TOKEN ECONOMY</p>
           <button onClick={onBack}>RETURN TO PROTOCOL ↗</button>
         </footer>

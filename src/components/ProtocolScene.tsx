@@ -782,12 +782,12 @@ function FlywheelObject() {
         </points>
       </group>
       <mesh>
-        <circleGeometry args={[0.56, 72]} />
+        <circleGeometry args={[0.7, 72]} />
         <meshBasicMaterial color="#080909" transparent opacity={0.96} />
         <pointLight color="#0EFF00" intensity={5} distance={2.4} />
       </mesh>
       <mesh>
-        <torusGeometry args={[0.6, 0.016, 10, 64]} />
+        <torusGeometry args={[0.75, 0.016, 10, 64]} />
         <meshBasicMaterial color="#dcd9d3" transparent opacity={0.72} />
       </mesh>
     </group>
