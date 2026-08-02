@@ -56,7 +56,12 @@ export function App() {
       {route === '/buybacks' && <BuybacksPage />}
       {route === '/flywheel' && <FlywheelPage />}
       {route === '/more' && <MorePage />}
-      {route === '/' && <IntroPage onEnter={() => navigate('/burn')} />}
+      {route === '/' && (
+        <IntroPage
+          onEnter={() => navigate('/burn')}
+          onReadMechanism={() => navigate('/whitepaper')}
+        />
+      )}
     </AppShell>
   )
 }

@@ -2,9 +2,10 @@ import { IntroBackground } from '../components/IntroBackground'
 
 interface IntroPageProps {
   onEnter: () => void
+  onReadMechanism: () => void
 }
 
-export function IntroPage({ onEnter }: IntroPageProps) {
+export function IntroPage({ onEnter, onReadMechanism }: IntroPageProps) {
   return (
     <section className="intro-page page-enter">
       <IntroBackground />
@@ -16,7 +17,7 @@ export function IntroPage({ onEnter }: IntroPageProps) {
         </div>
         <div className="intro-actions">
           <button className="primary-action" onClick={onEnter}>ENTER ECOSYSTEM <span>↗</span></button>
-          <button className="secondary-action" onClick={onEnter}>READ THE MECHANISM</button>
+          <button className="secondary-action" onClick={onReadMechanism}>READ THE MECHANISM</button>
         </div>
       </div>
 

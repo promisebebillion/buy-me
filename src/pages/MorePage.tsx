@@ -15,12 +15,14 @@ export function MorePage() {
           <span><i /> SECURE EXTERNAL VIEW</span>
           <strong>https://www.moretokens.com/</strong>
         </div>
-        <iframe
-          src="https://www.moretokens.com/"
-          title="$MORE ecosystem"
-          referrerPolicy="strict-origin-when-cross-origin"
-          allow="clipboard-read; clipboard-write"
-        />
+        <div className="more-iframe-window">
+          <iframe
+            src="https://www.moretokens.com/"
+            title="$MORE ecosystem"
+            referrerPolicy="strict-origin-when-cross-origin"
+            allow="clipboard-read; clipboard-write"
+          />
+        </div>
       </div>
 
       <p className="more-embed-note">
