@@ -7,6 +7,7 @@ const sections = [
   ['05', 'LIQUIDITY', '/liquidity'],
   ['06', 'BUYBACKS', '/buybacks'],
   ['07', 'FLYWHEEL', '/flywheel'],
+  ['08', '$MORE', '/more'],
 ] as const
 
 interface SidebarProps {
@@ -42,8 +43,7 @@ export function Sidebar({ route, navigate }: SidebarProps) {
       <div className="side-footer">
         <button className="docs-link" onClick={() => navigate('/whitepaper')}>DOCS <span>↗</span></button>
         <div className="socials">
-          <a href="#x" aria-label="X">X</a>
-          <a href="#telegram" aria-label="Telegram">TG</a>
+          <a href="https://x.com/trvon" target="_blank" rel="noreferrer" aria-label="X profile">X</a>
         </div>
         <div className="live"><span /> LIVE / ON-CHAIN</div>
       </div>

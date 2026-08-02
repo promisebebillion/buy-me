@@ -10,6 +10,7 @@ import { LiquidityPage } from './pages/LiquidityPage'
 import { LocksPage } from './pages/LocksPage'
 import { StakingPage } from './pages/StakingPage'
 import { WhitepaperPage } from './pages/WhitepaperPage'
+import { MorePage } from './pages/MorePage'
 
 function cleanPath(path: string) {
   const normalized = path.toLowerCase()
@@ -20,6 +21,7 @@ function cleanPath(path: string) {
   if (normalized.startsWith('/buybacks')) return '/buybacks'
   if (normalized.startsWith('/flywheel')) return '/flywheel'
   if (normalized.startsWith('/whitepaper')) return '/whitepaper'
+  if (normalized.startsWith('/more')) return '/more'
   if (normalized.startsWith('/burn')) return '/burn'
   return '/'
 }
@@ -53,6 +55,7 @@ export function App() {
       {route === '/liquidity' && <LiquidityPage wallet={wallet} />}
       {route === '/buybacks' && <BuybacksPage />}
       {route === '/flywheel' && <FlywheelPage />}
+      {route === '/more' && <MorePage />}
       {route === '/' && <IntroPage onEnter={() => navigate('/burn')} />}
     </AppShell>
   )

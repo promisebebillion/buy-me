@@ -163,8 +163,8 @@ function IntroObject() {
   return (
     <group ref={group} position={[0.25, 0, 0]} rotation={[-0.04, -0.08, 0.03]} scale={0.92}>
       <AnimatedPointCloud positions={hand} color="#dadbd7" size={4.4} opacity={0.82} />
-      <AnimatedPointCloud positions={dollar} color="#ff2a20" size={6.3} opacity={1} />
-      <pointLight position={[0, 0.9, 0.85]} color="#ff211b" intensity={7} distance={3.8} />
+      <AnimatedPointCloud positions={dollar} color="#0EFF00" size={6.3} opacity={1} />
+      <pointLight position={[0, 0.9, 0.85]} color="#0EFF00" intensity={7} distance={3.8} />
       <Line points={[[-1.65, -2.62, -0.1], [1.42, -2.62, -0.1]]} color="#f0eee8" transparent opacity={0.16} lineWidth={0.45} />
     </group>
   )
@@ -216,10 +216,10 @@ export function ReactiveGrid() {
           const glow = Math.max(0, 1 - distance / 180)
           const wave = (Math.sin(x * 0.035 + y * 0.024 - phase * 3) + 1) * 0.5
           const alpha = 0.035 + glow * (0.22 + wave * 0.13)
-          context.strokeStyle = `rgba(${glow > 0.62 ? '255,47,35' : '195,211,214'},${alpha})`
+          context.strokeStyle = `rgba(${glow > 0.62 ? '14,255,0' : '130,185,132'},${alpha})`
           context.strokeRect(x + 0.5, y + 0.5, cell - 1, cell - 1)
           if (glow > 0.28) {
-            context.fillStyle = `rgba(255,40,28,${glow * wave * 0.055})`
+            context.fillStyle = `rgba(14,255,0,${glow * wave * 0.065})`
             context.fillRect(x + 2, y + 2, cell - 4, cell - 4)
           }
         }
@@ -293,12 +293,12 @@ function BurnObject() {
       ))}
       <AnimatedPointCloud positions={particles} color="#efeee8" size={4.1} opacity={0.88} />
       {gate.map((points, index) => (
-        <Line key={index} points={points} color="#ff130d" transparent opacity={0.28 + index * 0.13} lineWidth={1.1 + index * 0.35} />
+        <Line key={index} points={points} color="#0EFF00" transparent opacity={0.28 + index * 0.13} lineWidth={1.1 + index * 0.35} />
       ))}
       <mesh position={[-0.15, 0, 0]}>
         <sphereGeometry args={[0.075, 24, 24]} />
-        <meshBasicMaterial color="#ff1b12" />
-        <pointLight color="#ff1b12" intensity={9} distance={2.7} />
+        <meshBasicMaterial color="#0EFF00" />
+        <pointLight color="#0EFF00" intensity={9} distance={2.7} />
       </mesh>
       <Line points={[[-4.35, 0, 0], [3.6, 0, 0]]} color="#ffffff" opacity={0.18} transparent lineWidth={0.5} />
     </group>
@@ -353,14 +353,14 @@ function AirdropObject() {
         <group key={index}>
           <Line
             points={branch.points}
-            color={branch.accent ? '#ff211b' : '#e8e7e1'}
+            color={branch.accent ? '#0EFF00' : '#e8e7e1'}
             transparent
             opacity={branch.accent ? 0.72 : 0.34}
             lineWidth={branch.accent ? 1.1 : 0.55}
           />
           <mesh position={branch.end}>
             <boxGeometry args={[0.115, 0.115, 0.115]} />
-            <meshBasicMaterial color={branch.accent ? '#ff211b' : '#efeee9'} wireframe />
+            <meshBasicMaterial color={branch.accent ? '#0EFF00' : '#efeee9'} wireframe />
           </mesh>
         </group>
       ))}
@@ -372,8 +372,8 @@ function AirdropObject() {
       </points>
       <mesh position={[-3.65, 0, 0]}>
         <boxGeometry args={[0.26, 0.26, 0.26]} />
-        <meshBasicMaterial color="#ff1a14" />
-        <pointLight color="#ff1a14" intensity={13} distance={3.4} />
+        <meshBasicMaterial color="#0EFF00" />
+        <pointLight color="#0EFF00" intensity={13} distance={3.4} />
       </mesh>
       {[0.42, 0.73, 1.12].map((radius) => {
         const ring = Array.from({ length: 65 }, (_, i) => {
@@ -441,7 +441,7 @@ function StakingObject() {
           <Line
             key={index}
             points={points}
-            color={index === 1 ? '#ff241d' : '#e7e5df'}
+            color={index === 1 ? '#0EFF00' : '#e7e5df'}
             transparent
             opacity={index === 1 ? 0.5 : 0.25 + index * 0.025}
             lineWidth={index === 1 ? 0.8 : 0.55}
@@ -462,12 +462,12 @@ function StakingObject() {
       </points>
       <mesh>
         <torusGeometry args={[0.62, 0.055, 14, 80]} />
-        <meshBasicMaterial color="#ff211b" />
+        <meshBasicMaterial color="#0EFF00" />
       </mesh>
       <mesh>
         <circleGeometry args={[0.49, 64]} />
         <meshBasicMaterial color="#090707" transparent opacity={0.95} />
-        <pointLight color="#ff1a14" intensity={10} distance={3} />
+        <pointLight color="#0EFF00" intensity={10} distance={3} />
       </mesh>
       <Line points={[[-4.5, 0, 0], [4.2, 0, 0]]} color="#f2f0ea" transparent opacity={0.24} lineWidth={0.5} />
     </group>
@@ -545,8 +545,8 @@ function LocksObject() {
       </points>
       <mesh position={[-4.2, 0, 0]}>
         <torusGeometry args={[0.11, 0.028, 10, 32]} />
-        <meshBasicMaterial color="#ff211b" />
-        <pointLight color="#ff1a14" intensity={8} distance={2.4} />
+        <meshBasicMaterial color="#0EFF00" />
+        <pointLight color="#0EFF00" intensity={8} distance={2.4} />
       </mesh>
       <mesh position={[3.55, 0, 0]}>
         <torusGeometry args={[0.11, 0.026, 10, 32]} />
@@ -610,7 +610,7 @@ function LiquidityObject() {
           <Line
             key={index}
             points={points}
-            color={index === 2 || index === 3 ? '#ff211b' : '#e9e7e1'}
+            color={index === 2 || index === 3 ? '#0EFF00' : '#e9e7e1'}
             transparent
             opacity={index === 2 || index === 3 ? 0.62 : 0.24}
             lineWidth={index === 2 || index === 3 ? 0.85 : 0.55}
@@ -618,11 +618,11 @@ function LiquidityObject() {
         ))}
       </group>
       {streams.map((stream) => (
-        <Line key={stream.kind} points={stream.points} color={stream.kind === 'buy' ? '#ff211b' : '#eeece7'} transparent opacity={0.55} lineWidth={0.65} />
+        <Line key={stream.kind} points={stream.points} color={stream.kind === 'buy' ? '#0EFF00' : '#eeece7'} transparent opacity={0.55} lineWidth={0.65} />
       ))}
       <points>
         <bufferGeometry><bufferAttribute attach="attributes-position" args={[particles.red, 3]} /></bufferGeometry>
-        <pointsMaterial color="#ff211b" size={0.038} transparent opacity={0.85} sizeAttenuation />
+        <pointsMaterial color="#0EFF00" size={0.038} transparent opacity={0.85} sizeAttenuation />
       </points>
       <points>
         <bufferGeometry><bufferAttribute attach="attributes-position" args={[particles.white, 3]} /></bufferGeometry>
@@ -635,7 +635,7 @@ function LiquidityObject() {
       {Array.from({ length: 6 }, (_, index) => (
         <mesh key={index} position={[3.5 + (index % 3) * 0.45, 0.28 - Math.floor(index / 3) * 0.56, 0]}>
           <boxGeometry args={[0.15, 0.15, 0.15]} />
-          <meshBasicMaterial color={index % 3 === 2 ? '#f0eee8' : '#ff211b'} wireframe />
+          <meshBasicMaterial color={index % 3 === 2 ? '#f0eee8' : '#0EFF00'} wireframe />
         </mesh>
       ))}
       <Line points={[[2.5, 0, 0], [3.35, 0, 0]]} color="#edeae4" transparent opacity={0.55} lineWidth={0.65} />
@@ -706,7 +706,7 @@ function BuybacksObject() {
       </points>
       <points>
         <bufferGeometry><bufferAttribute attach="attributes-position" args={[marketPoints.red, 3]} /></bufferGeometry>
-        <pointsMaterial color="#ff211b" size={0.035} transparent opacity={0.86} sizeAttenuation />
+        <pointsMaterial color="#0EFF00" size={0.035} transparent opacity={0.86} sizeAttenuation />
       </points>
       <points>
         <bufferGeometry><bufferAttribute attach="attributes-position" args={[revenue, 3]} /></bufferGeometry>
@@ -715,10 +715,10 @@ function BuybacksObject() {
       <Line points={[[-4.1, 0, 0], [-1.72, 0, 0]]} color="#eeeae4" transparent opacity={0.5} lineWidth={0.6} />
       {routes.map((route, index) => (
         <group key={index}>
-          <Line points={route.points} color="#ff211b" transparent opacity={0.74} lineWidth={0.85} />
+          <Line points={route.points} color="#0EFF00" transparent opacity={0.74} lineWidth={0.85} />
           <mesh position={route.end}>
             <boxGeometry args={[0.28, 0.28, 0.28]} />
-            <meshBasicMaterial color={index === 1 ? '#f0eee8' : '#ff211b'} wireframe />
+            <meshBasicMaterial color={index === 1 ? '#f0eee8' : '#0EFF00'} wireframe />
           </mesh>
         </group>
       ))}
@@ -770,7 +770,7 @@ function FlywheelObject() {
           <Line
             key={index}
             points={points}
-            color={index === 2 || index === 6 ? '#ff211b' : '#e7e5df'}
+            color={index === 2 || index === 6 ? '#0EFF00' : '#e7e5df'}
             transparent
             opacity={index === 2 || index === 6 ? 0.52 : 0.12 + index * 0.014}
             lineWidth={index === 2 || index === 6 ? 0.78 : 0.42}
@@ -784,7 +784,7 @@ function FlywheelObject() {
       <mesh>
         <circleGeometry args={[0.56, 72]} />
         <meshBasicMaterial color="#080909" transparent opacity={0.96} />
-        <pointLight color="#ff1a14" intensity={5} distance={2.4} />
+        <pointLight color="#0EFF00" intensity={5} distance={2.4} />
       </mesh>
       <mesh>
         <torusGeometry args={[0.6, 0.016, 10, 64]} />

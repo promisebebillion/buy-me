@@ -45,10 +45,10 @@ export function IntroBackground() {
 
     const drawWave = (time: number, y: number, opacity: number) => {
       const gradient = context.createLinearGradient(0, 0, width, 0)
-      gradient.addColorStop(0, 'rgba(67,133,170,0)')
-      gradient.addColorStop(0.48, `rgba(139,214,239,${opacity})`)
-      gradient.addColorStop(0.82, `rgba(235,247,248,${opacity * 0.65})`)
-      gradient.addColorStop(1, 'rgba(67,133,170,0)')
+      gradient.addColorStop(0, 'rgba(14,255,0,0)')
+      gradient.addColorStop(0.48, `rgba(14,255,0,${opacity})`)
+      gradient.addColorStop(0.82, `rgba(190,255,180,${opacity * 0.65})`)
+      gradient.addColorStop(1, 'rgba(14,255,0,0)')
       context.strokeStyle = gradient
       context.lineWidth = 0.7
       context.beginPath()
@@ -114,8 +114,8 @@ export function IntroBackground() {
       context.globalCompositeOperation = 'screen'
       context.globalAlpha = pointer.energy
       const glow = context.createRadialGradient(pointer.x, pointer.y, 0, pointer.x, pointer.y, radius * 0.9)
-      glow.addColorStop(0, 'rgba(126,211,238,0.12)')
-      glow.addColorStop(0.34, 'rgba(63,143,186,0.055)')
+      glow.addColorStop(0, 'rgba(14,255,0,0.14)')
+      glow.addColorStop(0.34, 'rgba(14,255,0,0.06)')
       glow.addColorStop(1, 'rgba(0,0,0,0)')
       context.fillStyle = glow
       context.fillRect(0, 0, width, height)
@@ -134,7 +134,7 @@ export function IntroBackground() {
       loaded = true
       resize()
     }
-    image.src = '/back-intro.png'
+    image.src = '/back-intro-2.png'
     resize()
     frame = requestAnimationFrame(render)
 

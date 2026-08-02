@@ -1,4 +1,3 @@
-import { ProtocolScene } from '../components/ProtocolScene'
 import { IntroBackground } from '../components/IntroBackground'
 
 interface IntroPageProps {
@@ -21,9 +20,9 @@ export function IntroPage({ onEnter }: IntroPageProps) {
         </div>
       </div>
 
-      <div className="intro-visual">
-        <ProtocolScene variant="intro" />
-      </div>
+      {/* The interactive 3D hand is temporarily disabled. The empty visual
+          column preserves the desktop hero composition for the image artwork. */}
+      <div className="intro-visual intro-visual--background-only" aria-hidden="true" />
 
       <div className="protocol-state">
         <div className="state-title">LIVE PROTOCOL STATE</div>

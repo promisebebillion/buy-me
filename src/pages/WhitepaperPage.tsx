@@ -201,7 +201,7 @@ function SystemFlow() {
 }
 
 function SupplyCurve() {
-  const scenarios = [{ rate: 0.0025, color: '#777', label: '0.25%' }, { rate: 0.005, color: '#ccc8c0', label: '0.50%' }, { rate: 0.01, color: '#ff201a', label: '1.00%' }]
+  const scenarios = [{ rate: 0.0025, color: '#777', label: '0.25%' }, { rate: 0.005, color: '#ccc8c0', label: '0.50%' }, { rate: 0.01, color: '#0EFF00', label: '1.00%' }]
   const pathFor = (rate: number) => Array.from({ length: 25 }, (_, i) => `${i === 0 ? 'M' : 'L'} ${48 + i * 24} ${26 + (1 - Math.pow(1 - rate, i)) * 570}`).join(' ')
   return <div className="paper-chart"><div className="chart-title"><span>NORMALIZED SUPPLY</span><strong>CONSTANT BURN-RATE SCENARIOS</strong></div><svg viewBox="0 0 660 230" role="img" aria-label="Illustrative normalized supply curves"><g className="chart-grid">{[40, 80, 120, 160, 200].map((y) => <line key={y} x1="48" y1={y} x2="624" y2={y} />)}</g>{scenarios.map((scenario) => <path key={scenario.label} d={pathFor(scenario.rate)} fill="none" stroke={scenario.color} strokeWidth="2" />)}<line x1="48" y1="26" x2="48" y2="202" className="chart-axis"/><line x1="48" y1="202" x2="624" y2="202" className="chart-axis"/><text x="10" y="34">100%</text><text x="13" y="204">80%</text><text x="48" y="222">0</text><text x="596" y="222">24 EPOCHS</text></svg><div className="chart-legend">{scenarios.map((scenario) => <span key={scenario.label}><i style={{ background: scenario.color }} />{scenario.label} / EPOCH</span>)}</div></div>
 }
