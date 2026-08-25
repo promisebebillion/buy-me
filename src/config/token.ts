@@ -1,2 +1,2 @@
 // Replace this value with the real $BUY mint address (CA) when the token is created.
-export const BUY_TOKEN_CA = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
+export const BUY_TOKEN_CA = 'G3vj6uJ1M2Vn3entfY54ocMwY4XkcwMU2oXmKLaCpump'
