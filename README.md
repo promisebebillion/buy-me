@@ -40,9 +40,28 @@ Phantom Portal app ID. Web3 transaction dependencies will be added only after
 the token chain and contract/program are known; this avoids shipping unused,
 vulnerable transitive packages.
 
+## $BUY holding gate
+
+Burn, airdrop, staking, lock, and liquidity actions require the connected wallet
+to hold at least 1,000,000 `$BUY`. The UI reads every matching SPL token account
+owned by the wallet, then fails closed when the wallet is below the threshold or
+the check cannot be completed.
+
+Copy `.env.example` to `.env.local` and configure:
+
+```env
+VITE_SOLANA_RPC_URL=https://your-solana-rpc.example
+VITE_BUY_MINT_ADDRESS=YOUR_BUY_SPL_TOKEN_MINT
+```
+
+The client-side gate controls this interface. When real programs are deployed,
+the same rule must also be enforced by each on-chain instruction; browser checks
+alone are not a security boundary.
+
 ## Still needed before a real burn
 
 - `$BUY` mint address and chain confirmation.
+- Solana RPC URL for balance and supply verification.
 - Burn instruction/program or contract ABI/address.
 - RPC endpoint and cluster/network choice.
 - Balance and protocol-stat data sources.

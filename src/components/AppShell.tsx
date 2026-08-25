@@ -2,6 +2,7 @@ import type { ReactNode } from 'react'
 import { Sidebar } from './Sidebar'
 import { ReactiveGrid } from './ProtocolScene'
 import { WalletButton } from './WalletButton'
+import { TokenAddressBar } from './TokenAddressBar'
 
 interface AppShellProps {
   route: string
@@ -39,6 +40,7 @@ export function AppShell({ route, navigate, wallet, children }: AppShellProps) {
       <main className="main-view">{children}</main>
       <div className="noise" aria-hidden="true" />
       <div className="scanlines" aria-hidden="true" />
+      <TokenAddressBar />
     </div>
   )
 }

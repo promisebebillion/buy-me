@@ -1,6 +1,10 @@
 import { useMemo, useState } from 'react'
 import { ProtocolScene } from '../components/ProtocolScene'
 import { InlineSelect, SettingsControl, TokenDropdown } from '../components/InteractiveControls'
+import { HoldingRequirement } from '../components/HoldingRequirement'
+import { ProtocolAccessNotice } from '../components/ProtocolAccessNotice'
+import { useAccessSimulation } from '../hooks/useAccessSimulation'
+import type { BuyHoldingGate } from '../hooks/useBuyHoldingGate'
 
 interface BurnPageProps {
   wallet: {
@@ -8,12 +12,13 @@ interface BurnPageProps {
     status: 'idle' | 'connecting' | 'connected' | 'error'
     connect: () => void
   }
+  holdingGate: BuyHoldingGate
 }
 
-export function BurnPage({ wallet }: BurnPageProps) {
+export function BurnPage({ wallet, holdingGate }: BurnPageProps) {
   const [amount, setAmount] = useState('')
   const [token, setToken] = useState('$BUY')
-  const [notice, setNotice] = useState<string | null>(null)
+  const access = useAccessSimulation()
   const numericAmount = Number.parseFloat(amount || '0')
   const amountIsValid = Number.isFinite(numericAmount) && numericAmount > 0
   const output = amountIsValid ? numericAmount.toFixed(2) : '0.00'
@@ -21,9 +26,10 @@ export function BurnPage({ wallet }: BurnPageProps) {
   const buttonLabel = useMemo(() => {
     if (wallet.status === 'connecting') return 'CONNECTING…'
     if (!wallet.address) return 'CONNECT WALLET TO BURN'
+    if (access.processing) return 'VERIFYING PROTOCOL ACCESS...'
     if (!amountIsValid) return 'ENTER AMOUNT'
     return `BURN ${output} ${token}`
-  }, [amountIsValid, output, token, wallet.address, wallet.status])
+  }, [access.processing, amountIsValid, output, token, wallet.address, wallet.status])
 
   const submit = () => {
     if (!wallet.address) {
@@ -31,7 +37,7 @@ export function BurnPage({ wallet }: BurnPageProps) {
       return
     }
     if (!amountIsValid) return
-    setNotice('Token mint and burn authority are not configured yet.')
+    access.start()
   }
 
   return (
@@ -77,10 +83,11 @@ export function BurnPage({ wallet }: BurnPageProps) {
           <small>Destination&nbsp; 0x0000...dEaD</small>
         </div>
 
-        <button className="burn-action" onClick={submit} disabled={wallet.status === 'connecting' || (!!wallet.address && !amountIsValid)}>
+        <HoldingRequirement gate={holdingGate} />
+        <button className="burn-action" onClick={submit} disabled={wallet.status === 'connecting' || access.processing || (!!wallet.address && !amountIsValid)}>
           {buttonLabel}
         </button>
-        {notice && <button className="terminal-notice" onClick={() => setNotice(null)}>{notice} ×</button>}
+        <ProtocolAccessNotice {...access} onDismiss={access.dismiss} />
       </div>
 
       <div className="transaction-bar">

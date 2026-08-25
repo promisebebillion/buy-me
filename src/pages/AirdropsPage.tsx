@@ -1,6 +1,10 @@
 import { useMemo, useState } from 'react'
 import { ProtocolScene } from '../components/ProtocolScene'
 import { InlineSelect, SettingsControl, TokenDropdown } from '../components/InteractiveControls'
+import { HoldingRequirement } from '../components/HoldingRequirement'
+import { ProtocolAccessNotice } from '../components/ProtocolAccessNotice'
+import { useAccessSimulation } from '../hooks/useAccessSimulation'
+import type { BuyHoldingGate } from '../hooks/useBuyHoldingGate'
 
 interface AirdropsPageProps {
   wallet: {
@@ -8,29 +12,31 @@ interface AirdropsPageProps {
     status: 'idle' | 'connecting' | 'connected' | 'error'
     connect: () => void
   }
+  holdingGate: BuyHoldingGate
 }
 
 type AirdropMode = 'distribute' | 'claim'
 type RecipientGroup = 'holders' | 'stakers' | 'locked'
 
-export function AirdropsPage({ wallet }: AirdropsPageProps) {
+export function AirdropsPage({ wallet, holdingGate }: AirdropsPageProps) {
   const [mode, setMode] = useState<AirdropMode>('distribute')
   const [group, setGroup] = useState<RecipientGroup>('holders')
   const [amount, setAmount] = useState('')
   const [token, setToken] = useState('$BUY')
   const [minimum, setMinimum] = useState('')
   const [snapshot, setSnapshot] = useState('LATEST')
-  const [notice, setNotice] = useState<string | null>(null)
+  const access = useAccessSimulation()
   const numericAmount = Number.parseFloat(amount || '0')
   const amountIsValid = Number.isFinite(numericAmount) && numericAmount > 0
 
   const actionLabel = useMemo(() => {
     if (wallet.status === 'connecting') return 'CONNECTING…'
     if (!wallet.address) return mode === 'claim' ? 'CONNECT WALLET TO CLAIM' : 'CONNECT WALLET TO DISTRIBUTE'
+    if (access.processing) return 'VERIFYING PROTOCOL ACCESS...'
     if (mode === 'claim') return 'CHECK AVAILABLE AIRDROPS'
     if (!amountIsValid) return 'ENTER DISTRIBUTION AMOUNT'
     return `DISTRIBUTE ${numericAmount.toFixed(2)} ${token}`
-  }, [amountIsValid, mode, numericAmount, token, wallet.address, wallet.status])
+  }, [access.processing, amountIsValid, mode, numericAmount, token, wallet.address, wallet.status])
 
   const submit = () => {
     if (!wallet.address) {
@@ -38,7 +44,7 @@ export function AirdropsPage({ wallet }: AirdropsPageProps) {
       return
     }
     if (mode === 'distribute' && !amountIsValid) return
-    setNotice('Airdrop program and eligibility indexer are not configured yet.')
+    access.start()
   }
 
   return (
@@ -104,8 +110,9 @@ export function AirdropsPage({ wallet }: AirdropsPageProps) {
           <div><span>NETWORK FEE</span><strong>—</strong></div>
         </div>
 
-        <button className="burn-action" onClick={submit} disabled={wallet.status === 'connecting' || (mode === 'distribute' && !!wallet.address && !amountIsValid)}>{actionLabel}</button>
-        {notice && <button className="terminal-notice" onClick={() => setNotice(null)}>{notice} ×</button>}
+        <HoldingRequirement gate={holdingGate} />
+        <button className="burn-action" onClick={submit} disabled={wallet.status === 'connecting' || access.processing || (!!wallet.address && mode === 'distribute' && !amountIsValid)}>{actionLabel}</button>
+        <ProtocolAccessNotice {...access} onDismiss={access.dismiss} />
       </div>
 
       <div className="feature-transaction-bar">

@@ -1,6 +1,10 @@
 import { useMemo, useState } from 'react'
 import { ProtocolScene } from '../components/ProtocolScene'
 import { InlineSelect, SettingsControl, TokenDropdown } from '../components/InteractiveControls'
+import { HoldingRequirement } from '../components/HoldingRequirement'
+import { ProtocolAccessNotice } from '../components/ProtocolAccessNotice'
+import { useAccessSimulation } from '../hooks/useAccessSimulation'
+import type { BuyHoldingGate } from '../hooks/useBuyHoldingGate'
 
 interface LiquidityPageProps {
   wallet: {
@@ -8,16 +12,17 @@ interface LiquidityPageProps {
     status: 'idle' | 'connecting' | 'connected' | 'error'
     connect: () => void
   }
+  holdingGate: BuyHoldingGate
 }
 
 type LiquidityMode = 'add' | 'remove' | 'positions'
 
-export function LiquidityPage({ wallet }: LiquidityPageProps) {
+export function LiquidityPage({ wallet, holdingGate }: LiquidityPageProps) {
   const [mode, setMode] = useState<LiquidityMode>('add')
   const [buyAmount, setBuyAmount] = useState('')
   const [solAmount, setSolAmount] = useState('')
   const [pool, setPool] = useState('$BUY / SOL')
-  const [notice, setNotice] = useState<string | null>(null)
+  const access = useAccessSimulation()
   const buy = Number.parseFloat(buyAmount || '0')
   const sol = Number.parseFloat(solAmount || '0')
   const pairIsValid = Number.isFinite(buy) && buy > 0 && Number.isFinite(sol) && sol > 0
@@ -25,10 +30,11 @@ export function LiquidityPage({ wallet }: LiquidityPageProps) {
   const actionLabel = useMemo(() => {
     if (wallet.status === 'connecting') return 'CONNECTING…'
     if (!wallet.address) return `CONNECT WALLET TO ${mode === 'positions' ? 'VIEW POSITIONS' : `${mode.toUpperCase()} LIQUIDITY`}`
+    if (access.processing) return 'VERIFYING PROTOCOL ACCESS...'
     if (mode === 'positions') return 'REFRESH LP POSITIONS'
     if (!pairIsValid) return 'ENTER BOTH TOKEN AMOUNTS'
     return `${mode.toUpperCase()} LIQUIDITY`
-  }, [mode, pairIsValid, wallet.address, wallet.status])
+  }, [access.processing, mode, pairIsValid, wallet.address, wallet.status])
 
   const submit = () => {
     if (!wallet.address) {
@@ -36,7 +42,7 @@ export function LiquidityPage({ wallet }: LiquidityPageProps) {
       return
     }
     if (mode !== 'positions' && !pairIsValid) return
-    setNotice('Liquidity pool address and router are not configured yet.')
+    access.start()
   }
 
   return (
@@ -73,8 +79,9 @@ export function LiquidityPage({ wallet }: LiquidityPageProps) {
           <div><span>LP POSITION</span><strong>—</strong></div>
         </div>
 
-        <button className="burn-action" onClick={submit} disabled={wallet.status === 'connecting' || (mode !== 'positions' && !!wallet.address && !pairIsValid)}>{actionLabel}</button>
-        {notice && <button className="terminal-notice" onClick={() => setNotice(null)}>{notice} ×</button>}
+        <HoldingRequirement gate={holdingGate} />
+        <button className="burn-action" onClick={submit} disabled={wallet.status === 'connecting' || access.processing || (!!wallet.address && mode !== 'positions' && !pairIsValid)}>{actionLabel}</button>
+        <ProtocolAccessNotice {...access} onDismiss={access.dismiss} />
       </div>
 
       <div className="feature-transaction-bar">

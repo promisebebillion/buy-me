@@ -11,6 +11,7 @@ import { LocksPage } from './pages/LocksPage'
 import { StakingPage } from './pages/StakingPage'
 import { WhitepaperPage } from './pages/WhitepaperPage'
 import { MorePage } from './pages/MorePage'
+import { useBuyHoldingGate } from './hooks/useBuyHoldingGate'
 
 function cleanPath(path: string) {
   const normalized = path.toLowerCase()
@@ -29,6 +30,7 @@ function cleanPath(path: string) {
 export function App() {
   const [route, setRoute] = useState(() => cleanPath(window.location.pathname))
   const wallet = usePhantom()
+  const holdingGate = useBuyHoldingGate(wallet.address)
 
   useEffect(() => {
     const onPopState = () => setRoute(cleanPath(window.location.pathname))
@@ -48,11 +50,11 @@ export function App() {
 
   return (
     <AppShell route={route} navigate={navigate} wallet={wallet}>
-      {route === '/burn' && <BurnPage wallet={wallet} />}
-      {route === '/airdrops' && <AirdropsPage wallet={wallet} />}
-      {route === '/staking' && <StakingPage wallet={wallet} />}
-      {route === '/locks' && <LocksPage wallet={wallet} />}
-      {route === '/liquidity' && <LiquidityPage wallet={wallet} />}
+      {route === '/burn' && <BurnPage wallet={wallet} holdingGate={holdingGate} />}
+      {route === '/airdrops' && <AirdropsPage wallet={wallet} holdingGate={holdingGate} />}
+      {route === '/staking' && <StakingPage wallet={wallet} holdingGate={holdingGate} />}
+      {route === '/locks' && <LocksPage wallet={wallet} holdingGate={holdingGate} />}
+      {route === '/liquidity' && <LiquidityPage wallet={wallet} holdingGate={holdingGate} />}
       {route === '/buybacks' && <BuybacksPage />}
       {route === '/flywheel' && <FlywheelPage />}
       {route === '/more' && <MorePage />}

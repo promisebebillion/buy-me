@@ -1,6 +1,10 @@
 import { useMemo, useState } from 'react'
 import { ProtocolScene } from '../components/ProtocolScene'
 import { InlineSelect, SettingsControl, TokenDropdown } from '../components/InteractiveControls'
+import { HoldingRequirement } from '../components/HoldingRequirement'
+import { ProtocolAccessNotice } from '../components/ProtocolAccessNotice'
+import { useAccessSimulation } from '../hooks/useAccessSimulation'
+import type { BuyHoldingGate } from '../hooks/useBuyHoldingGate'
 
 interface LocksPageProps {
   wallet: {
@@ -8,17 +12,18 @@ interface LocksPageProps {
     status: 'idle' | 'connecting' | 'connected' | 'error'
     connect: () => void
   }
+  holdingGate: BuyHoldingGate
 }
 
 type LockMode = 'create lock' | 'extend' | 'unlock'
 const periods = [30, 90, 180, 365] as const
 
-export function LocksPage({ wallet }: LocksPageProps) {
+export function LocksPage({ wallet, holdingGate }: LocksPageProps) {
   const [mode, setMode] = useState<LockMode>('create lock')
   const [amount, setAmount] = useState('')
   const [token, setToken] = useState('$BUY')
   const [period, setPeriod] = useState<number>(90)
-  const [notice, setNotice] = useState<string | null>(null)
+  const access = useAccessSimulation()
   const numericAmount = Number.parseFloat(amount || '0')
   const amountIsValid = Number.isFinite(numericAmount) && numericAmount > 0
   const progress = ((period - 30) / (365 - 30)) * 100
@@ -32,10 +37,11 @@ export function LocksPage({ wallet }: LocksPageProps) {
   const actionLabel = useMemo(() => {
     if (wallet.status === 'connecting') return 'CONNECTING…'
     if (!wallet.address) return `CONNECT WALLET TO ${mode === 'create lock' ? 'LOCK' : mode.toUpperCase()}`
+    if (access.processing) return 'VERIFYING PROTOCOL ACCESS...'
     if (mode !== 'unlock' && !amountIsValid) return 'ENTER AMOUNT'
     if (mode === 'unlock') return 'CHECK UNLOCKABLE TOKENS'
     return `${mode === 'extend' ? 'EXTEND' : 'LOCK'} ${numericAmount.toFixed(2)} ${token}`
-  }, [amountIsValid, mode, numericAmount, token, wallet.address, wallet.status])
+  }, [access.processing, amountIsValid, mode, numericAmount, token, wallet.address, wallet.status])
 
   const submit = () => {
     if (!wallet.address) {
@@ -43,7 +49,7 @@ export function LocksPage({ wallet }: LocksPageProps) {
       return
     }
     if (mode !== 'unlock' && !amountIsValid) return
-    setNotice('Token-lock program and custody account are not configured yet.')
+    access.start()
   }
 
   return (
@@ -99,8 +105,9 @@ export function LocksPage({ wallet }: LocksPageProps) {
           <div><span>EARLY EXIT</span><strong>—</strong></div>
         </div>
 
-        <button className="burn-action" onClick={submit} disabled={wallet.status === 'connecting' || (mode !== 'unlock' && !!wallet.address && !amountIsValid)}>{actionLabel}</button>
-        {notice && <button className="terminal-notice" onClick={() => setNotice(null)}>{notice} ×</button>}
+        <HoldingRequirement gate={holdingGate} />
+        <button className="burn-action" onClick={submit} disabled={wallet.status === 'connecting' || access.processing || (!!wallet.address && mode !== 'unlock' && !amountIsValid)}>{actionLabel}</button>
+        <ProtocolAccessNotice {...access} onDismiss={access.dismiss} />
       </div>
 
       <div className="feature-transaction-bar">

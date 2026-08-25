@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { ReactiveGrid } from '../components/ProtocolScene'
+import { TokenAddressBar } from '../components/TokenAddressBar'
 
 interface WhitepaperPageProps {
   onBack: () => void
@@ -183,6 +184,7 @@ export function WhitepaperPage({ onBack }: WhitepaperPageProps) {
         </footer>
       </main>
       <div className="paper-noise" />
+      <TokenAddressBar />
     </div>
   )
 }

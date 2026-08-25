@@ -1,6 +1,10 @@
 import { useMemo, useState } from 'react'
 import { ProtocolScene } from '../components/ProtocolScene'
 import { InlineSelect, SettingsControl, TokenDropdown } from '../components/InteractiveControls'
+import { HoldingRequirement } from '../components/HoldingRequirement'
+import { ProtocolAccessNotice } from '../components/ProtocolAccessNotice'
+import { useAccessSimulation } from '../hooks/useAccessSimulation'
+import type { BuyHoldingGate } from '../hooks/useBuyHoldingGate'
 
 interface StakingPageProps {
   wallet: {
@@ -8,26 +12,28 @@ interface StakingPageProps {
     status: 'idle' | 'connecting' | 'connected' | 'error'
     connect: () => void
   }
+  holdingGate: BuyHoldingGate
 }
 
 type StakeMode = 'stake' | 'unstake' | 'claim'
 
-export function StakingPage({ wallet }: StakingPageProps) {
+export function StakingPage({ wallet, holdingGate }: StakingPageProps) {
   const [mode, setMode] = useState<StakeMode>('stake')
   const [amount, setAmount] = useState('')
   const [token, setToken] = useState('$BUY')
   const [pool, setPool] = useState('$BUY CORE POOL')
-  const [notice, setNotice] = useState<string | null>(null)
+  const access = useAccessSimulation()
   const numericAmount = Number.parseFloat(amount || '0')
   const amountIsValid = Number.isFinite(numericAmount) && numericAmount > 0
 
   const actionLabel = useMemo(() => {
     if (wallet.status === 'connecting') return 'CONNECTING…'
     if (!wallet.address) return `CONNECT WALLET TO ${mode.toUpperCase()}`
+    if (access.processing) return 'VERIFYING PROTOCOL ACCESS...'
     if (mode === 'claim') return 'CLAIM AVAILABLE REWARDS'
     if (!amountIsValid) return 'ENTER AMOUNT'
     return `${mode.toUpperCase()} ${numericAmount.toFixed(2)} ${token}`
-  }, [amountIsValid, mode, numericAmount, token, wallet.address, wallet.status])
+  }, [access.processing, amountIsValid, mode, numericAmount, token, wallet.address, wallet.status])
 
   const submit = () => {
     if (!wallet.address) {
@@ -35,7 +41,7 @@ export function StakingPage({ wallet }: StakingPageProps) {
       return
     }
     if (mode !== 'claim' && !amountIsValid) return
-    setNotice('Staking program and reward pool are not configured yet.')
+    access.start()
   }
 
   return (
@@ -94,8 +100,9 @@ export function StakingPage({ wallet }: StakingPageProps) {
           <div><span>EST. REWARDS</span><strong>—</strong></div>
         </div>
 
-        <button className="burn-action" onClick={submit} disabled={wallet.status === 'connecting' || (mode !== 'claim' && !!wallet.address && !amountIsValid)}>{actionLabel}</button>
-        {notice && <button className="terminal-notice" onClick={() => setNotice(null)}>{notice} ×</button>}
+        <HoldingRequirement gate={holdingGate} />
+        <button className="burn-action" onClick={submit} disabled={wallet.status === 'connecting' || access.processing || (!!wallet.address && mode !== 'claim' && !amountIsValid)}>{actionLabel}</button>
+        <ProtocolAccessNotice {...access} onDismiss={access.dismiss} />
       </div>
 
       <div className="feature-transaction-bar">
