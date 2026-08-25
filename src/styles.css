@@ -220,7 +220,7 @@ input:focus-visible {
   padding: 23px 14px 0;
   border-top: 1px solid var(--line);
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 14px;
 }
 
 .live span,
@@ -1074,7 +1074,7 @@ input:focus-visible {
 
 .token-address-bar:hover { background: #7bff76; }
 .token-address-bar span { margin-right: 8px; }
-.token-address-bar em { position: absolute; right: 18px; font-size: 8px; font-style: normal; letter-spacing: .1em; opacity: .65; }
+.token-address-bar em { position: absolute; right: 18px; font-size: 9px; font-style: normal; letter-spacing: .1em; opacity: .65; }
 
 .transaction-bar {
   grid-column: 1;
